@@ -170,7 +170,7 @@ def echo(update, context):
 
 
 def main() -> None:
-    updater = Updater("2034824924:AAFc0q0PYPezeZ6G5kE10uBWhWSurKks-8A")
+    updater = Updater("")
 
     updater.dispatcher.add_handler(CommandHandler('check', check))
     updater.dispatcher.add_handler(CommandHandler('start', start))
