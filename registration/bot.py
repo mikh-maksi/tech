@@ -43,6 +43,15 @@ print(main_options)
 # --------parameters-------
 
 
+# --------for text---------
+text_title = ["Текст 1","Текст 2","Текст 3"]
+text_code = ["t1","t2","t3"]
+text_options = []
+for i in range(len(text_title)):
+    dict_={"name":text_title[i],"slug":text_code[i],"childs":None}
+    text_options.append(dict_)
+# --------for text---------
+
 def keyb(id,list_in):
     key_lst = []
     kb = [] 
@@ -93,6 +102,7 @@ def button(update: Update, context: CallbackContext) -> None:
         string = "kb2"
         keyboard = keyb(chat.id,list_child_dicts)
         reply_markup = InlineKeyboardMarkup(keyboard)
+        query.edit_message_text(text=f"*Введите* {query.data}")
         context.bot.send_message(chat_id=chat.id, text=string,reply_markup=reply_markup)
     elif (query.data in dict2list_slug(list_child_dicts)):
         f = open('users_data.csv','a')
@@ -101,10 +111,16 @@ def button(update: Update, context: CallbackContext) -> None:
         f.close()
         string = "kb2"
         keyboard = keyb(chat.id,start_options)
-        reply_markup = InlineKeyboardMarkup(keyboard)
+        reply_markup = InlineKeyboardMarkup(keyboard)        
+        query.edit_message_text(text=f"Ввели {query.data}")
         context.bot.send_message(chat_id=chat.id, text=string,reply_markup=reply_markup)
 
         # update.message.reply_text(string, reply_markup=reply_markup)
+    elif (query.data in dict2list_slug(text_options)):
+        print(text_options)
+        keyboard = keyb(chat.id,text_options)
+        reply_markup = InlineKeyboardMarkup(keyboard)    
+        query.edit_message_text(text=f"Текст берем из {query.data}",reply_markup=reply_markup)
 
     elif (query.data in dict2list_slug(start_options)) or (query.data in dict2list_slug(main_options)):
         print(start_check(chat.id,start_options))
@@ -161,7 +177,7 @@ def echo(update, context):
         keyboard = keyb(chat.id,start_options)
     else:
         string = "Основное меню бота"
-        keyboard = keyb(chat.id,main_options)
+        keyboard = keyb(chat.id,text_options)
 
 
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -170,11 +186,11 @@ def echo(update, context):
 
 
 def main() -> None:
-    updater = Updater("")
+    updater = Updater("2034824924:AAFc0q0PYPezeZ6G5kE10uBWhWSurKks-8A")
 
     updater.dispatcher.add_handler(CommandHandler('check', check))
     updater.dispatcher.add_handler(CommandHandler('start', start))
-    updater.dispatcher.add_handler(CommandHandler('init', init))
+    # updater.dispatcher.add_handler(CommandHandler('init', init))
     updater.dispatcher.add_handler(CallbackQueryHandler(button))
     # updater.dispatcher.add_handler(CommandHandler('help', help_command))
     updater.dispatcher.add_handler(MessageHandler(Filters.all, echo))
